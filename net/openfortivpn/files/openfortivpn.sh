@@ -17,6 +17,7 @@ proto_openfortivpn_init_config() {
 	proto_config_add_int "port"
 	proto_config_add_string "tunlink"
 	proto_config_add_string "local_ip"
+	proto_config_add_string "pem_passphrase"
 	proto_config_add_string "username"
 	proto_config_add_string "password"
 	proto_config_add_int "persist_int"
@@ -33,7 +34,7 @@ proto_openfortivpn_setup() {
 
 	local peeraddr port tunlink local_ip username password persist_int \
 	      trusted_cert remote_status_check
-	json_get_vars host peeraddr port tunlink local_ip username password persist_int \
+	json_get_vars host peeraddr port tunlink local_ip pem_passphrase username password persist_int \
 		      trusted_cert remote_status_check
 
 	ifname="vpn-$config"
@@ -119,6 +120,7 @@ proto_openfortivpn_setup() {
 
 	[ -n "$persist_int" ] && append_args "--persistent=$persist_int"
 	[ -n "$trusted_cert" ] && append_args "--trusted-cert=$trusted_cert"
+	[ -n "$pem_passphrase" ] && append_args "--pem-passphrase=$pem_passphrase"
 	[ -n "$username" ] && append_args -u "$username"
 	[ -n "$password" ] && {
 	        umask 077
@@ -150,12 +152,14 @@ receive-all
 nodetach
 ipparam $config
 lcp-max-configure 40
+lcp-echo-interval 30
 ip-up-script /lib/netifd/openfortivpn-ppp-up
 ip-down-script /lib/netifd/ppp-down
 mru 1354"  > "$callfile"
 	append_args "--pppd-call=openfortivpn/$config"
 
 	logger -p 6 -t openfortivpn "$config: executing 'openfortivpn $cmdline'"
+	[ -n "$pwfile" ] || pwfile='/dev/null'
 	eval "proto_run_command '$config' /usr/sbin/openfortivpn-wrapper '$pwfile' '$config' $cmdline"
 
 }
