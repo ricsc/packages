@@ -46,7 +46,8 @@ PKG_CONFIG_DEPENDS:= \
   CONFIG_PRIVOXY_enable-external-filters \
   CONFIG_PRIVOXY_enable-accept-filter \
   CONFIG_PRIVOXY_enable-strptime-sanity-checks \
-  CONFIG_PRIVOXY_enable-compression
+  CONFIG_PRIVOXY_enable-compression \
+  CONFIG_PRIVOXY_enable-https
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -58,7 +59,7 @@ define Package/privoxy
   URL:=http://www.privoxy.org/
   USERID:=privoxy=8118:privoxy=8118
   MENU:=1
-  DEPENDS:=+!PRIVOXY_no_pcre:libpcre2 +!PRIVOXY_no_pthread:libpthread +!PRIVOXY_no_zlib:zlib
+  DEPENDS:=+!PRIVOXY_no_pcre:libpcre2 +!PRIVOXY_no_pthread:libpthread +!PRIVOXY_no_zlib:zlib +libopenssl
 endef
 
 # shown in LuCI package description

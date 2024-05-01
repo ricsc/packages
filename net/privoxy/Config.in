@@ -109,7 +109,13 @@ if PACKAGE_privoxy
 			if the client supports it. Requires zlib support.
 		depends on !PRIVOXY_no_zlib
 		default n
-
+	
+	config PRIVOXY_enable-https
+                bool "Allow Privoxy to filter https content. "
+                help
+                        Allow Privoxy to filter https connections.
+                        Requires openssl support.
+                default n
 
 endif
                 

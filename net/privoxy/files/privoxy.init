@@ -71,7 +71,7 @@ _uci2conf() {
 	chown privoxy:privoxy $_LOGDIR/$_LOGFILE
 	echo -e "logdir\t$_LOGDIR" >> $CFGTEMP
 	echo -e "logfile\t$_LOGFILE" >> $CFGTEMP
-
+	echo -e "receive-buffer-size\t30000" >> $CFGTEMP
 	# confdir
 	# privoxy needs read access (possibly write access)
 	_CONFDIR=$(uci -q get privoxy.privoxy.confdir) || _CONFDIR="/etc/privoxy"
